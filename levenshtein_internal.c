@@ -84,12 +84,13 @@ levenshtein_internal(
       int ins_c, int del_c, int sub_c)
 #endif
 {
-	int		   *prev;
-	int		   *curr;
-	int		   *s_char_len = NULL;
-	int			i,
-				j;
+	int *prev;
+	int *curr;
+	int *s_char_len = NULL;
+	int i, j;
 	const char *y;
+   int result;
+
 
 	/*
 	 * For levenshtein_less_equal_internal, we have real variables called
@@ -384,8 +385,10 @@ levenshtein_internal(
 			}
 
 			/* If they cross, we're going to exceed the bound. */
-			if (start_column >= stop_column)
-				return max_d + 1;
+			if (start_column >= stop_column) {
+				result = max_d + 1;
+            goto free_return;
+         }
 		}
 #endif
 	}
@@ -394,5 +397,9 @@ levenshtein_internal(
 	 * Because the final value was swapped from the previous row to the
 	 * current row, that's where we'll find it.
 	 */
-	return prev[m - 1];
+	result = prev[m - 1];
+free_return:
+   Safefree(s_char_len);
+   Safefree(prev);
+   return result;
 }
