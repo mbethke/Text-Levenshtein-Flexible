@@ -1,13 +1,9 @@
-# Before `make install' is performed this script should be runnable with
-# `make test'. After `make install' it should work as `perl Text-Levenshtein-Flexible.t'
-
-#########################
-
-# change 'tests => 2' to 'tests => last_test_to_print';
-
 use strict;
 use warnings;
 
-use Test::More tests => 1;
+use Test::More tests => 2;
+use Test::Exception;
+
 BEGIN { use_ok('Text::Levenshtein::Flexible') };
 
+is(Text::Levenshtein::Flexible::levenshtein('aaa', 'abab'), 2, "Simple distance calculation");
