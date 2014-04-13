@@ -19,9 +19,9 @@ our @ISA = qw(Exporter);
 # will save memory.
 our %EXPORT_TAGS = ( 'all' => [ qw(
 	levenshtein
-	levenshtein_less_equal
-	levenshtein_less_equal_with_costs
-	levenshtein_with_costs
+	levenshtein_costs
+	levenshtein_le
+	levenshtein_le_costs
 ) ] );
 
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );

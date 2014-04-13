@@ -10,7 +10,7 @@ WriteMakefile(
       (ABSTRACT_FROM  => 'lib/Text/Levenshtein/Flexible.pm', # retrieve abstract from module
        AUTHOR         => 'Matthias Bethke <matthias@towiski.de>') : ()),
     LIBS              => [''], # e.g., '-lm'
-    DEFINE            => '', # e.g., '-DHAVE_SOMETHING'
+    DEFINE            => '-ggdb', # e.g., '-DHAVE_SOMETHING'
     INC               => '-I.', # e.g., '-I. -I/usr/include/other'
 	# Un-comment this if you add C files to link with later:
     # OBJECT            => '$(O_FILES)', # link all the C files too

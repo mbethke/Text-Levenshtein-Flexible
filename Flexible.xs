@@ -6,21 +6,16 @@
 
 #include <ctype.h>
 
-/* Faster than memcmp(), for this use case. */
-static bool inline rest_of_char_same(const char *s1, const char *s2, int len)
-{
-	while (len > 0)
-	{
-		len--;
-		if (s1[len] != s2[len])
-			return 0;
-	}
-	return 1;
-}
+#include "levenshtein.c"
 
-#include "levenshtein_internal.c"
-#define LEVENSHTEIN_LESS_EQUAL
-#include "levenshtein_internal.c"
+#define CALCULATE_CHAR_LENGTHS(src, dst, srcb, dstb, srcc, dstc) \
+      if(DO_UTF8(src) || DO_UTF8(dst)) { \
+         srcc = sv_len_utf8(src); \
+         dstc = sv_len_utf8(dst); \
+      } else { \
+         srcc = srcb; \
+         dstc = dstb; \
+      }
 
 MODULE = Text::Levenshtein::Flexible		PACKAGE = Text::Levenshtein::Flexible		
 
@@ -34,14 +29,56 @@ levenshtein(src, dst)
    CODE:
       src_c = SvPV(src, src_bytes);
       dst_c = SvPV(dst, dst_bytes);
-      if(DO_UTF8(src) || DO_UTF8(dst)) {
-         src_chars = sv_len_utf8(src);
-         dst_chars = sv_len_utf8(dst);
-      } else {
-         src_chars = src_bytes;
-         dst_chars = dst_bytes;
-      }
-	   RETVAL = levenshtein_internal(src_c, dst_c, src_bytes, dst_bytes, src_chars, dst_chars, 1, 1, 1);
+      CALCULATE_CHAR_LENGTHS(src, dst, src_bytes, dst_bytes, src_chars, dst_chars);
+	   RETVAL = levenshtein_internal(
+         src_c, dst_c, src_bytes, dst_bytes, src_chars, dst_chars,
+         1, 1, 1
+      );
    OUTPUT:
+      RETVAL
+
+unsigned int
+levenshtein_costs(src, dst, cost_ins, cost_del, cost_sub)
+	SV * src
+	SV * dst
+   SV * cost_ins
+   SV * cost_del
+   SV * cost_sub
+   INIT:
+      STRLEN src_bytes, src_chars, dst_bytes, dst_chars;
+      const char *src_c, *dst_c;
+   CODE:
+      src_c = SvPV(src, src_bytes);
+      dst_c = SvPV(dst, dst_bytes);
+      CALCULATE_CHAR_LENGTHS(src, dst, src_bytes, dst_bytes, src_chars, dst_chars);
+	   RETVAL = levenshtein_internal(
+         src_c, dst_c, src_bytes, dst_bytes, src_chars, dst_chars,
+         SvUV(cost_ins), SvUV(cost_del), SvUV(cost_sub)
+      );
+   OUTPUT:
+      RETVAL
+
+unsigned int
+levenshtein_le(src, dst, max)
+	SV * src
+	SV * dst
+   SV * max
+   INIT:
+      STRLEN src_bytes, src_chars, dst_bytes, dst_chars;
+      const char *src_c, *dst_c;
+      const unsigned int max_dist = SvUV(max);
+      unsigned int result;
+   CODE:
+      src_c = SvPV(src, src_bytes);
+      dst_c = SvPV(dst, dst_bytes);
+      CALCULATE_CHAR_LENGTHS(src, dst, src_bytes, dst_bytes, src_chars, dst_chars);
+	   RETVAL = levenshtein_less_equal_internal(
+         src_c, dst_c, src_bytes, dst_bytes, src_chars, dst_chars,
+         1, 1, 1,
+         max_dist
+      );
+      if(max_dist + 1 == RETVAL)   // exceeded max
+         XSRETURN_UNDEF;
+  OUTPUT:
       RETVAL
 

@@ -84,7 +84,7 @@ levenshtein_internal(
       int ins_c, int del_c, int sub_c)
 #endif
 {
-	int *prev;
+	int *prev, *prev_alloc;
 	int *curr;
 	int *s_char_len = NULL;
 	int i, j;
@@ -210,6 +210,7 @@ levenshtein_internal(
 	// prev = (int *) palloc(2 * m * sizeof(int));
 	Newx(prev, 2*m, int);
 	curr = prev + m;
+   prev_alloc = prev;
 
 	/*
 	 * To transform the first i characters of s into the first 0 characters of
@@ -399,7 +400,9 @@ levenshtein_internal(
 	 */
 	result = prev[m - 1];
 free_return:
-   Safefree(s_char_len);
-   Safefree(prev);
+   if(s_char_len)
+      Safefree(s_char_len);
+   if(prev)
+      Safefree(prev_alloc);
    return result;
 }
