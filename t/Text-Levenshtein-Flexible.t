@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 12;
+use Test::More tests => 13;
 use Test::Exception;
 
 BEGIN { use_ok('Text::Levenshtein::Flexible', qw/ :all /) };
@@ -19,3 +19,12 @@ dies_ok(sub { levenshtein_le('a', 'b'x10000, 3) }, 'Max string size enforced for
 is(levenshtein_costs('xxxx', 'xxaxx', 1, 100, 100), 1, 'Costs: insert');
 is(levenshtein_costs('xxaxx', 'xxxx', 100, 1, 100), 1, 'Costs: delete');
 is(levenshtein_costs('xxaxx', 'xxbxx', 100, 100, 1), 1, 'Costs: substitute');
+
+my @teststrings = qw/ axb axxxxxb abcde ab a 123456 /;
+my @results = levenshtein_le_all(3, 'abc', @teststrings);
+is_deeply(
+    \@results,
+    [ ['axb', 2], ['abcde', 2], ['ab', 1], ['a', 2]],
+    "Returnings all matches in levenshtein_le_all()"
+);
+

@@ -10,19 +10,11 @@ use AutoLoader;
 
 our @ISA = qw(Exporter);
 
-# Items to export into callers namespace by default. Note: do not export
-# names by default without a very good reason. Use EXPORT_OK instead.
-# Do not simply export all your public functions/methods/constants.
-
-# This allows declaration	use Text::Levenshtein::Flexible ':all';
-# If you do not need this, moving things directly into @EXPORT or @EXPORT_OK
-# will save memory.
-our %EXPORT_TAGS = ( 'all' => [ qw(
-	levenshtein
-	levenshtein_costs
-	levenshtein_le
-	levenshtein_le_costs
-) ] );
+our %EXPORT_TAGS = (
+    'all' => [
+        qw( levenshtein levenshtein_costs levenshtein_le levenshtein_le_costs levenshtein_le_all )
+    ]
+);
 
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
@@ -53,6 +45,18 @@ sub AUTOLOAD {
 
 require XSLoader;
 XSLoader::load('Text::Levenshtein::Flexible', $VERSION);
+
+sub levenshtein_le_all {
+    my $max_distance = shift;
+    my $s = shift;
+    my @results;
+    for my $t (@_) {
+        my $distance = levenshtein_le($s, $t, $max_distance);
+        next unless defined $distance;
+        push @results, [ $t, $distance ];
+    }
+    return @results;
+}
 
 # Preloaded methods go here.
 
