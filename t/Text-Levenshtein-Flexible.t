@@ -25,6 +25,9 @@ my @results = levenshtein_le_all(3, 'abc', @teststrings);
 is_deeply(
     \@results,
     [ ['axb', 2], ['abcde', 2], ['ab', 1], ['a', 2]],
-    "Returnings all matches in levenshtein_le_all()"
+    "Returning all matches in levenshtein_le_all()"
 );
 
+do {
+    my $tlf = Text::Levenshtein::Flexible->new(1, 2, 4, 6);
+};

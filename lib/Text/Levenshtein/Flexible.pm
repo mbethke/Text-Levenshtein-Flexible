@@ -58,30 +58,32 @@ sub levenshtein_le_all {
     return @results;
 }
 
-# Preloaded methods go here.
-
-# Autoload methods go after =cut, and are processed by the autosplit program.
+sub levenshtein_le_costs_all {
+    my ($max_distance, $cost_ins, $cost_del, $cost_sub, $s) = @_;
+    splice(@_, 0, 4);
+    my @results;
+    for my $t (@_) {
+        my $distance = levenshtein_le_costs($s, $t, $max_distance, $cost_ins, $cost_del, $cost_sub);
+        next unless defined $distance;
+        push @results, [ $t, $distance ];
+    }
+    return @results;
+}
 
 1;
-__END__
-# Below is stub documentation for your module. You'd better edit it!
 
 =head1 NAME
 
-Text::Levenshtein::Flexible - Perl extension for blah blah blah
+Text::Levenshtein::Flexible - XS Levenshtein distance calculation with bounds and costs
 
 =head1 SYNOPSIS
 
   use Text::Levenshtein::Flexible;
-  blah blah blah
+
 
 =head1 DESCRIPTION
 
-Stub documentation for Text::Levenshtein::Flexible, created by h2xs. It looks like the
-author of the extension was negligent enough to leave the stub
-unedited.
-
-Blah blah blah.
+Yet another Levenshtein module written in C, but a tad more flexible than the rest.
 
 =head2 EXPORT
 
