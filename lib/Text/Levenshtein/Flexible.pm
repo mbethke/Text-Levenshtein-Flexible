@@ -269,9 +269,10 @@ Matthias Bethke, E<lt>matthias@towiski.deE<gt>
 Copyright (C) 2014 by Matthias Bethke
 
 This library is free software; you can redistribute it and/or modify it under
-the same terms as Perl itself. Significant portions of the code are (C)
-PostgreSQL Global Development Group and The Regents of the University of
-California. All modified versions must retain the file COPYRIGHT included in
-the distribution.
+the same terms as Perl itself, either Perl version 5.14.2 or, at your option,
+any later version of Perl 5 you may have available. Significant portions of the
+code are (C) PostgreSQL Global Development Group and The Regents of the
+University of California. All modified versions must retain the file COPYRIGHT
+included in the distribution.
 
 =cut
