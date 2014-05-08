@@ -102,6 +102,7 @@ sub distance_lc_all {
 }
 
 1;
+__END__
 
 =encoding UTF-8
 
@@ -208,19 +209,21 @@ Note there is no C<levenshtein_all()> function because it is trivial to write us
 
 The OO API will usually be more convenient except for trivial calculations
 because it allows to specify limits and costs once and pass only variable data
-to object methods. Being implemented in C/XS it is just as fast if not faster
-(due to less argument-passing overhead) as the procedural one.
+to object methods. Being implemented in C/XS it is just as fast as the
+procedural one.
 
 =head2 new($max_distance, $cost_ins, $cost_del, $cost_sub)
 
-All four constructor arguments are obligatory; pass 1 for costs and some number
-over 255 for C<$max_distance> (passing something significantly bigger doesn't
-hurt, in case the hardcoded limit for calculations should grow some day) if you
-don't care.
+All four constructor arguments are optional but must be defined if they are
+used, i.e. you have to specify a number for C<$max_distance> if you want to use
+the costs. Pass 1 for costs and some number over 255 times the largest of the
+cost values for C<$max_distance> (passing something significantly bigger
+doesn't hurt, in case the hardcoded limit for calculations should grow some
+day) if you don't care.
 
 =head2 distance($src, $dst)
 
-Just for orthogonality, this does the same as C<levenshtein()> but a tad slower.
+Just for orthogonality, this does the same as C<levenshtein()>.
 
 =head2 distance_c($src, $dst)
 
@@ -250,8 +253,12 @@ L<Text::Levenshtein::XS>
 
 Dont even bother with anything else unless you're more interested in the
 algorithm than in practical applications as the algorithm is one of the better
-examples for something reasonably efficient in C that blows completely when
-written in Perl.
+examples for something reasonably efficient in C that Perl is terrible at.
+
+=head1 ACKNOWLEDGEMENTS
+
+All the credit for speed and algorithmic cleverness goes to Joe Conway and
+Volkan Yazici who wrote this module's clever bits, originally for PostgreSQL.
 
 =head1 AUTHOR
 
@@ -261,11 +268,10 @@ Matthias Bethke, E<lt>matthias@towiski.deE<gt>
 
 Copyright (C) 2014 by Matthias Bethke
 
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself, either Perl version 5.14.2 or,
-at your option, any later version of Perl 5 you may have available.
-
+This library is free software; you can redistribute it and/or modify it under
+the same terms as Perl itself. Significant portions of the code are (C)
+PostgreSQL Global Development Group and The Regents of the University of
+California. All modified versions must retain the file COPYRIGHT included in
+the distribution.
 
 =cut
-
-__END__
