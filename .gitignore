@@ -1,1 +1,4 @@
 *.sw[pqr]
+*.o
+*.tar.gz
+*.tar.bz2
