@@ -31,15 +31,15 @@
 #include <ctype.h>
 
 /* Faster than memcmp(), for this use case. */
-static bool inline rest_of_char_same(const char *s1, const char *s2, int len)
+static int inline rest_of_char_same(const char *s1, const char *s2, int len)
 {
 	while (len > 0)
 	{
 		len--;
 		if (s1[len] != s2[len])
-			return false;
+			return 0;
 	}
-	return true;
+	return 1;
 }
 
 #include "levenshtein_internal.c"
