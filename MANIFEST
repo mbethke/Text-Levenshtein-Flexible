@@ -1,0 +1,15 @@
+Changes
+Flexible.xs
+Makefile.PL
+MANIFEST
+ppport.h
+README
+typemap
+t/OO.t
+t/Procedural.t
+fallback/const-c.inc
+fallback/const-xs.inc
+lib/Text/Levenshtein/Flexible.pm
+ppport.h
+levenshtein.c
+levenshtein_internal.c
