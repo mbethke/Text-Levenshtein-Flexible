@@ -1,0 +1,6 @@
+Revision history for Perl extension Text::Levenshtein::Flexible.
+
+0.01  Sun Mar 23 01:40:57 2014
+	- original version; created by h2xs 1.23 with options
+		-Oxan Text::Levenshtein::Flexible levenshtein.h
+
