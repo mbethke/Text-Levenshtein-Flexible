@@ -118,7 +118,9 @@ Text::Levenshtein::Flexible - XS Levenshtein distance calculation with bounds an
 
 Yet another Levenshtein module written in C, but a tad more flexible than the rest.
 
-This module uses code from PostgreSQL's levenshtein distance function to provide the following features on top of plain distance calculation as it is done by Levenshtein::XS and others:
+This module uses code from PostgreSQL's levenshtein distance function to
+provide the following features on top of plain distance calculation as it is
+done by Levenshtein::XS and others:
 
 =over 4
 
@@ -144,50 +146,50 @@ The following functions can be exported upon request, e.g.:
 
 =over 4
 
-=item levenshtein
+=item C<levenshtein>
 
-=item levenshtein_c
+=item C<levenshtein_c>
 
-=item levenshtein_l
+=item C<levenshtein_l>
 
-=item levenshtein_lc
+=item C<levenshtein_lc>
 
-=item levenshtein_l_all
+=item C<levenshtein_l_all>
 
-=item levenshtein_lc_all
+=item C<levenshtein_lc_all>
 
 =back
 
-=head1 Procedural interface
+=head2 Procedural interface
 
-The functions mentioned under L</Exportable> consitute the module's procedural
+The functions listed under L</Exportable> consitute the module's procedural
 API. Neither the names nor the huge parameter lists are particularly pretty so
 the OO interface is usually recommended.
 
-=head2 levenshtein($src, $dst)
+=head3 levenshtein($src, $dst)
 
 Plain Levenshtein distance calculation between the two strings C<$src> and C<$dst>.
 Always returns an integer. If the strings are too long (currently there is a
 hard-coded limit of 255 characters), the function may C<die()>, so call it in an
 eval block if this is a possibility.
 
-=head2 levenshtein_c($src, $dst, $cost_ins, $cost_del, $cost_sub)
+=head3 levenshtein_c($src, $dst, $cost_ins, $cost_del, $cost_sub)
 
 Distance between the two strings C<$src> and C<$dst> using the specified costs for
 insertion, deletion and substitution respectively. Always returns an integer
 unless it dies.
 
-=head2 levenshtein_l($src, $dst, $max_distance)
+=head3 levenshtein_l($src, $dst, $max_distance)
 
 Distance between C<$src> and C<$dst> unless it is bigger than C<$max_distance>
 (think C<_l>imit!), in which case C<undef> is returned. May die just like the
 other functions.
 
-=head2 levenshtein_lc($src, $dst, $max_distance, $cost_ins, $cost_del, $cost_sub)
+=head3 levenshtein_lc($src, $dst, $max_distance, $cost_ins, $cost_del, $cost_sub)
 
 Distance between C<$src> and C<$dst> using the specified costs, up to C<$max_distance>,
 
-=head2 levenshtein_l_all($max_distance, $src, @dst)
+=head3 levenshtein_l_all($max_distance, $src, @dst)
 
 For an array C<@dst> of strings, return all that are up to C<$max_distance>
 from C<$src>. The result is a list of 2-element arrays consisting of
@@ -203,16 +205,17 @@ For an array C<@dst> of strings, return all that are up to C<$max_distance>
 from C<$src> when using the specified costs as in levenshtein_c. The result is
 the same as for C<levenshtein_l_all>.
 
-Note there is no C<levenshtein_all()> function because it is trivial to write using C<map>.
+Note that there is no C<levenshtein_all()> function because it is trivial to
+write using C<map>.
 
-=head1 Object-oriented interface
+=head2 Object-oriented interface
 
 The OO API will usually be more convenient except for trivial calculations
 because it allows to specify limits and costs once and pass only variable data
 to object methods. Being implemented in C/XS it is just as fast as the
 procedural one.
 
-=head2 new($max_distance, $cost_ins, $cost_del, $cost_sub)
+=head3 new($max_distance, $cost_ins, $cost_del, $cost_sub)
 
 All four constructor arguments are optional but must be defined if they are
 used, i.e. you have to specify a number for C<$max_distance> if you want to use
@@ -221,31 +224,39 @@ cost values for C<$max_distance> (passing something significantly bigger
 doesn't hurt, in case the hardcoded limit for calculations should grow some
 day) if you don't care.
 
-=head2 distance($src, $dst)
+=head3 distance($src, $dst)
 
 Just for orthogonality, this does the same as C<levenshtein()>.
 
-=head2 distance_c($src, $dst)
+=head3 distance_c($src, $dst)
 
 Just like C<levenshtein_c()> but using the previously specified costs.
 
-=head2 distance_l($src, $dst)
+=head3 distance_l($src, $dst)
 
 C<levenshtein_l()>'s modern brother.
 
-=head2 distance_lc($src, $dst, $max_distance, $cost_ins, $cost_del, $cost_sub)
+=head3 distance_lc($src, $dst, $max_distance, $cost_ins, $cost_del, $cost_sub)
 
 The nicer variant of C<levenshtein_lc()>.
 
-=head2 distance_l_all($src, @dst)
+=head3 distance_l_all($src, @dst)
 
 Not quite as ugly but otherwise equivalent to C<levenshtein_l_all()>.
 
-=head2 distance_lc_all($src, @dst)
+=head3 distance_lc_all($src, @dst)
 
 Where C<levenshtein_lc_all()> gets really nasty, this does the same in a saner way.
 
 Of course there's no C<distance_all()> method either.
+
+=head2 Speed
+
+According to a few completely made-up benchmarks,
+L<Text::Levenshtein::Flexible> is at least as fast as L<Text::Levenshtein::XS>
+(Core i7 920) and up to 33% faster on some systems (Phenom II X6 1090T). A
+small benchmark script is included to test on your system, I'd be interested to
+hear about any unexpectedly good or bad performance.
 
 =head1 SEE ALSO
 
@@ -258,7 +269,8 @@ examples for something reasonably efficient in C that Perl is terrible at.
 =head1 ACKNOWLEDGEMENTS
 
 All the credit for speed and algorithmic cleverness goes to Joe Conway and
-Volkan Yazici who wrote this module's clever bits, originally for PostgreSQL.
+Volkan Yazici who wrote the bulk of this module's code, originally for
+PostgreSQL.
 
 =head1 AUTHOR
 
