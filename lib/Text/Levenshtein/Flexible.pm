@@ -266,6 +266,9 @@ Dont even bother with anything else unless you're more interested in the
 algorithm than in practical applications as the algorithm is one of the better
 examples for something reasonably efficient in C that Perl is terrible at.
 
+To find this module's lastest updates that are not on CPAN yet, check
+L<https://github.com/mbethke/Text-Levenshtein-Flexible>
+
 =head1 ACKNOWLEDGEMENTS
 
 All the credit for speed and algorithmic cleverness goes to Joe Conway and
