@@ -13,3 +13,4 @@ lib/Text/Levenshtein/Flexible.pm
 ppport.h
 levenshtein.c
 levenshtein_internal.c
+benchmark.pl
