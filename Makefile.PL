@@ -1,4 +1,4 @@
-use 5.014002;
+use 5.008008;
 use ExtUtils::MakeMaker;
 
 WriteMakefile(
@@ -13,6 +13,10 @@ WriteMakefile(
     LIBS              => [''], # e.g., '-lm'
     DEFINE            => '-ggdb', # e.g., '-DHAVE_SOMETHING'
     INC               => '-I.', # e.g., '-I. -I/usr/include/other'
+    dist => {
+        COMPRESS        => 'xz',
+        SUFFIX          => '.xz',
+    },
 	# Un-comment this if you add C files to link with later:
     # OBJECT            => '$(O_FILES)', # link all the C files too
 );
