@@ -121,8 +121,9 @@ levenshtein_lc(src, dst, max, cost_ins, cost_del, cost_sub)
       RETVAL
 
 Text::Levenshtein::Flexible
-new(class, max, cost_ins, cost_del, cost_sub)
+new(class, ...)
    char * class
+   PROTOTYPE: DISABLE
    CODE:
       RETVAL = calloc(1, sizeof(tlf_object_t));
       if(!RETVAL) croak("no memory for %s", class);
