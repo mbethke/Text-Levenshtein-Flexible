@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use utf8;
 
-use Test::More tests => 24;
+use Test::More tests => 32;
 use Test::Exception;
 
 BEGIN { use_ok('Text::Levenshtein::Flexible', qw/ :all /) };
@@ -53,8 +53,15 @@ is_deeply(
 # Partial arguments to new()
 my @args = (10, 2, 3, 4);
 do {
-    lives_ok(sub { _new(@args)->distance('abc', 'abd') }, @args."-arg new()");
+    lives_ok(
+        sub { is(_new(@args)->distance('abc', 'abd'),1, "Correct distance with default args") },
+        @args."-arg new()"
+    );
 } while(pop @args);
 
+# Unicode
+is(_new()->distance('Käßwåfer', 'Kaeswaafer'), 5, "Unicode strings, Latin");
+is(_new()->distance('猫', '尻'), 1, "Unicode strings, Kanji");
+is(_new()->distance('한글', '조선글'), 2, "Unicode strings, Hangul");
 
 sub _new { return Text::Levenshtein::Flexible->new(@_) }
