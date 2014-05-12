@@ -199,7 +199,7 @@ string-distance pairs. To get a list of strings sorted by distance:
     sort { $a->[1] <=> $b->[1] }
     levenshtein_l_all(2, "bar", "foo", "blah", "baz");
 
-=head2 levenshtein_lc_all($max_distance, $cost_ins, $cost_del, $cost_sub, $src, @dst)
+=head3 levenshtein_lc_all($max_distance, $cost_ins, $cost_del, $cost_sub, $src, @dst)
 
 For an array C<@dst> of strings, return all that are up to C<$max_distance>
 from C<$src> when using the specified costs as in levenshtein_c. The result is
