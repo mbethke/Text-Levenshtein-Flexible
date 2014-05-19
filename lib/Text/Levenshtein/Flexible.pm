@@ -1,6 +1,6 @@
 package Text::Levenshtein::Flexible;
 
-use 5.014002;
+use 5.008008;
 use strict;
 use warnings;
 use Carp;
