@@ -14,8 +14,8 @@ WriteMakefile(
     DEFINE            => '-ggdb', # e.g., '-DHAVE_SOMETHING'
     INC               => '-I.', # e.g., '-I. -I/usr/include/other'
     dist => {
-        COMPRESS        => 'xz',
-        SUFFIX          => '.xz',
+        COMPRESS        => 'bzip2',
+        SUFFIX          => '.bz2',
     },
 	# Un-comment this if you add C files to link with later:
     # OBJECT            => '$(O_FILES)', # link all the C files too
