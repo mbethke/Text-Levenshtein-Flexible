@@ -1,4 +1,4 @@
-Text-Levenshtein-Flexible version 0.02
+Text-Levenshtein-Flexible version 0.04
 ======================================
 
 Yet another Levenshtein module written in C, but a tad more flexible than the rest.
