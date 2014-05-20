@@ -125,7 +125,7 @@ new(class, ...)
    char * class
    PROTOTYPE: DISABLE
    CODE:
-      RETVAL = calloc(1, sizeof(tlf_object_t));
+      Newx(RETVAL, 1, tlf_object_t);
       if(!RETVAL) croak("no memory for %s", class);
       RETVAL->max      = items > 1 ? SvUV(ST(1)) : UINT_MAX;
       RETVAL->cost_ins = items > 2 ? SvUV(ST(2)) : 1;
@@ -138,7 +138,7 @@ void
 DESTROY(self)
    Text::Levenshtein::Flexible self
    CODE:
-      if(self) free(self);
+      if(self) Safefree(self);
 
 
 unsigned int
