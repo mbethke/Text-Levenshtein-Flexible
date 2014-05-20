@@ -125,7 +125,7 @@ new(class, ...)
    char * class
    PROTOTYPE: DISABLE
    CODE:
-      Newx(RETVAL, 1, tlf_object_t);
+      Newxz(RETVAL, 1, tlf_object_t);
       if(!RETVAL) croak("no memory for %s", class);
       RETVAL->max      = items > 1 ? SvUV(ST(1)) : UINT_MAX;
       RETVAL->cost_ins = items > 2 ? SvUV(ST(2)) : 1;
