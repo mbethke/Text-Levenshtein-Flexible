@@ -31,7 +31,7 @@
 #include <ctype.h>
 
 /* Faster than memcmp(), for this use case. */
-static int inline rest_of_char_same(const char *s1, const char *s2, int len)
+static int __inline rest_of_char_same(const char *s1, const char *s2, int len)
 {
 	while (len > 0)
 	{

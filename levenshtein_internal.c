@@ -192,7 +192,6 @@ levenshtein_internal(
 		int			i;
 		const char *cp = s_data;
 
-      // s_char_len = (int *) palloc((m + 1) * sizeof(int));
       Newx(s_char_len, m + 1, int);
 		for (i = 0; i < m; ++i)
 		{
@@ -207,7 +206,6 @@ levenshtein_internal(
 	++n;
 
 	/* Previous and current rows of notional array. */
-	// prev = (int *) palloc(2 * m * sizeof(int));
 	Newx(prev, 2*m, int);
 	curr = prev + m;
    prev_alloc = prev;
