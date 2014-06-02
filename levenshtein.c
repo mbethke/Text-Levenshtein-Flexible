@@ -30,14 +30,14 @@
 
 #include <ctype.h>
 
-#ifdef _MSC_VER
-   #define INLINE
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+   /* we have "inline" */
 #else
-   #define INLINE inline
+   #define inline static
 #endif
 
 /* Faster than memcmp(), for this use case. */
-static int INLINE rest_of_char_same(const char *s1, const char *s2, int len)
+inline int rest_of_char_same(const char *s1, const char *s2, int len)
 {
 	while (len > 0)
 	{

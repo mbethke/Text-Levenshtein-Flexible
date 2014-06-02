@@ -1,6 +1,10 @@
 Revision history for Perl extension Text::Levenshtein::Flexible.
 
-0.06  2014-06-03
+0.07  2014-06-03
+    * Last version slowed things down a bit for compatibility's sake. Fixed
+      using a check for C99
+
+0.06  2014-06-02
     * Fixed some Kwalitee complaints: license, min Perl version etc.
     * Should work with C89 compilers now
 
