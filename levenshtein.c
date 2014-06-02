@@ -30,8 +30,14 @@
 
 #include <ctype.h>
 
+#ifdef _MSC_VER
+   #define INLINE
+#else
+   #define INLINE inline
+#endif
+
 /* Faster than memcmp(), for this use case. */
-static int __inline rest_of_char_same(const char *s1, const char *s2, int len)
+static int INLINE rest_of_char_same(const char *s1, const char *s2, int len)
 {
 	while (len > 0)
 	{
