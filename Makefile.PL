@@ -1,9 +1,10 @@
-use 5.008008;
+use 5.006;
 use ExtUtils::MakeMaker;
 
 WriteMakefile(
     NAME              => 'Text::Levenshtein::Flexible',
     VERSION_FROM      => 'lib/Text/Levenshtein/Flexible.pm',
+    MIN_PERL_VERSION  => 5.008008,
     PREREQ_PM         => {
         'Test::Exception'   => 0,
     },
@@ -17,6 +18,7 @@ WriteMakefile(
         COMPRESS        => 'bzip2',
         SUFFIX          => '.bz2',
     },
+    LICENSE           => 'perl',
 	# Un-comment this if you add C files to link with later:
     # OBJECT            => '$(O_FILES)', # link all the C files too
 );

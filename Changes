@@ -1,5 +1,8 @@
 Revision history for Perl extension Text::Levenshtein::Flexible.
 
+0.06  2014-06-03
+    * Fixed some Kwalitee complaints: license, min Perl version etc.
+
 0.05  2014-05-21
     * Now using Newx/Safefree for object con-/destruction. This should fix
       runtime errors on Windows.
