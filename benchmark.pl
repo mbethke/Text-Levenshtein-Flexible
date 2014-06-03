@@ -5,7 +5,7 @@ use utf8;
 use Benchmark ':all';
 use Test::More tests => 2;
 use Text::Levenshtein::Flexible ':all';
-use Text::LevenshteinXS 'distance';
+use Text::Levenshtein::XS 'distance';
 
 my $s = "xa"x100;
 my $t = "yb"x100;
