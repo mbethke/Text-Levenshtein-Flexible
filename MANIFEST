@@ -5,7 +5,6 @@ fallback/const-c.inc
 fallback/const-xs.inc
 Flexible.xs
 levenshtein.c
-levenshtein.h
 levenshtein_internal.c
 lib/Text/Levenshtein/Flexible.pm
 Makefile.PL
