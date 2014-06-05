@@ -397,7 +397,9 @@ levenshtein_internal(
 	 * current row, that's where we'll find it.
 	 */
 	result = prev[m - 1];
+#ifdef LEVENSHTEIN_LESS_EQUAL
 free_return:
+#endif
    if(s_char_len)
       Safefree(s_char_len);
    if(prev)

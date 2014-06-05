@@ -81,7 +81,6 @@ levenshtein_l(src, dst, max)
       STRLEN src_bytes, src_chars, dst_bytes, dst_chars;
       const char *src_c, *dst_c;
       const unsigned int max_dist = SvUV(max);
-      unsigned int result;
    CODE:
       SETUP_SRC_DST;
       CALCULATE_CHAR_LENGTHS(src, dst, src_bytes, dst_bytes, src_chars, dst_chars);
@@ -107,7 +106,6 @@ levenshtein_lc(src, dst, max, cost_ins, cost_del, cost_sub)
       STRLEN src_bytes, src_chars, dst_bytes, dst_chars;
       const char *src_c, *dst_c;
       const unsigned int max_dist = SvUV(max);
-      unsigned int result;
    CODE:
       SETUP_SRC_DST;
       CALCULATE_CHAR_LENGTHS(src, dst, src_bytes, dst_bytes, src_chars, dst_chars);
@@ -185,7 +183,6 @@ distance_l(self, src, dst)
    INIT:
       STRLEN src_bytes, src_chars, dst_bytes, dst_chars;
       const char *src_c, *dst_c;
-      unsigned int result;
    CODE:
       SETUP_SRC_DST;
       CALCULATE_CHAR_LENGTHS(src, dst, src_bytes, dst_bytes, src_chars, dst_chars);
@@ -206,7 +203,6 @@ distance_lc(self, src, dst)
    INIT:
       STRLEN src_bytes, src_chars, dst_bytes, dst_chars;
       const char *src_c, *dst_c;
-      unsigned int result;
    CODE:
       SETUP_SRC_DST;
       CALCULATE_CHAR_LENGTHS(src, dst, src_bytes, dst_bytes, src_chars, dst_chars);
