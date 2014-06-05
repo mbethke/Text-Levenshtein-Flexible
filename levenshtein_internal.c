@@ -35,7 +35,7 @@ static int levenshtein_internal(
       int ins_c, int del_c, int sub_c);
 #endif
 
-#define MAX_LEVENSHTEIN_STRLEN		255
+#define MAX_LEVENSHTEIN_STRLEN	16384
 
 #define Min(x, y) ((x) < (y) ? (x) : (y))
 /*
