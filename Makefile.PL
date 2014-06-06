@@ -5,7 +5,8 @@ WriteMakefile(
     NAME              => 'Text::Levenshtein::Flexible',
     VERSION_FROM      => 'lib/Text/Levenshtein/Flexible.pm',
     MIN_PERL_VERSION  => 5.008008,
-    PREREQ_PM         => {
+    TEST_REQUIRES     => {
+        'Test::LeakTrace'   => 0,
         'Test::Exception'   => 0,
     },
     ($] >= 5.005 ?     ## Add these new keywords supported since 5.005
