@@ -24,57 +24,17 @@ our %EXPORT_TAGS = (
 
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 
 require XSLoader;
 XSLoader::load('Text::Levenshtein::Flexible', $VERSION);
 
 sub levenshtein_l_all {
-    my $max_distance = shift;
-    my $s = shift;
-    my @results;
-    for my $t (@_) {
-        my $distance = levenshtein_l($s, $t, $max_distance);
-        next unless defined $distance;
-        push @results, [ $t, $distance ];
-    }
-    return @results;
+    Text::Levenshtein::Flexible->new(shift)->distance_l_all(@_);
 }
 
 sub levenshtein_lc_all {
-    my ($max_distance, $cost_ins, $cost_del, $cost_sub, $s) = @_;
-    splice(@_, 0, 5);
-    my @results;
-    for my $t (@_) {
-        my $distance = levenshtein_lc($s, $t, $max_distance, $cost_ins, $cost_del, $cost_sub);
-        next unless defined $distance;
-        push @results, [ $t, $distance ];
-    }
-    return @results;
-}
-
-sub distance_l_all {
-    my $self = shift;
-    my $s = shift;
-    my @results;
-    for my $t (@_) {
-        my $distance = $self->distance_l($s, $t);
-        next unless defined $distance;
-        push @results, [ $t, $distance ];
-    }
-    return @results;
-}
-
-sub distance_lc_all {
-    my $self = shift;
-    my $s = shift;
-    my @results;
-    for my $t (@_) {
-        my $distance = $self->distance_lc($s, $t);
-        next unless defined $distance;
-        push @results, [ $t, $distance ];
-    }
-    return @results;
+    Text::Levenshtein::Flexible->new(splice(@_, 0, 4))->distance_lc_all(@_);
 }
 
 1;
@@ -175,11 +135,16 @@ string-distance pairs. To get a list of strings sorted by distance:
     sort { $a->[1] <=> $b->[1] }
     levenshtein_l_all(2, "bar", "foo", "blah", "baz");
 
+Note that since the C<*_all> functions were converted to XS as well, this
+function delegates to the OO version internally to avoid too much XS code
+duplication, so the OO interface is preferable for this in any case.
+
 =head3 levenshtein_lc_all($max_distance, $cost_ins, $cost_del, $cost_sub, $src, @dst)
 
 For an array C<@dst> of strings, return all that are up to C<$max_distance>
 from C<$src> when using the specified costs as in levenshtein_c. The result is
-the same as for C<levenshtein_l_all>.
+the same as for C<levenshtein_l_all> and the remark about the OO version
+applies equally here.
 
 Note that there is no C<levenshtein_all()> function because it is trivial to
 write using C<map>.
@@ -189,7 +154,7 @@ write using C<map>.
 The OO API will usually be more convenient except for trivial calculations
 because it allows to specify limits and costs once and pass only variable data
 to object methods. Being implemented in C/XS it is just as fast as the
-procedural one.
+procedural one, or faster in the case of the list functions.
 
 =head3 new($max_distance, $cost_ins, $cost_del, $cost_sub)
 
@@ -229,8 +194,9 @@ Of course there's no C<distance_all()> method either.
 =head2 Speed
 
 According to a few completely made-up benchmarks,
-L<Text::Levenshtein::Flexible> is at least as fast as L<Text::Levenshtein::XS>
-(Core i7 920) and up to 33% faster on some systems (Phenom II X6 1090T). A
+L<Text::Levenshtein::Flexible> is at least as fast as either
+L<Text::Levenshtein::XS>, L<Text::LevenshteinXS> or L<Text::Fuzzy> (Core i7
+920) and between 25% and 48% faster on some systems (Phenom II X6 1090T). A
 small benchmark script is included to test on your system, I'd be interested to
 hear about any unexpectedly good or bad performance.
 
