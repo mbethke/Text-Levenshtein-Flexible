@@ -3,8 +3,9 @@ use strict;
 use warnings;
 use utf8;
 
-use Test::More tests => 32;
+use Test::More tests => 34;
 use Test::Exception;
+use Test::LeakTrace;
 
 BEGIN { use_ok('Text::Levenshtein::Flexible', qw/ :all /) };
 
@@ -15,8 +16,8 @@ lives_ok(sub {
 
 # Simple calculations
 my $t = _new(100, 2, 4, 6);
-dies_ok(sub { $t->distance('a'x10000, 'b') }, 'Max string size enforced for src in distance()');
-dies_ok(sub { $t->distance('a', 'b'x10000) }, 'Max string size enforced for dst in distance()');
+dies_ok(sub { $t->distance('a'x20000, 'b') }, 'Max string size enforced for src in distance()');
+dies_ok(sub { $t->distance('a', 'b'x20000) }, 'Max string size enforced for dst in distance()');
 
 # Distance-limited methods
 is(_new(3, 2, 4, 6)->distance_l('aaa', 'abab'), 2, 'Limited distance with limit > dist');
@@ -24,12 +25,12 @@ is(_new(2, 2, 4, 6)->distance_l('aaa', 'abab'), 2, 'Limited distance with limit 
 is(_new(1, 2, 4, 6)->distance_l('aaa', 'abab'), undef, 'Limited distance with limit < dist');
 
 $t = _new(100000, 2, 4, 6);
-dies_ok(sub { $t->distance_l('a'x10000, 'b') }, 'Max string size enforced for src in distance_l()');
-dies_ok(sub { $t->distance_l('a', 'b'x10000) }, 'Max string size enforced for dst in distance_l()');
-dies_ok(sub { $t->distance_c('a'x10000, 'b') }, 'Max string size enforced for src in distance_c()');
-dies_ok(sub { $t->distance_c('a', 'b'x10000) }, 'Max string size enforced for dst in distance_c()');
-dies_ok(sub { $t->distance_lc('a'x10000, 'b') }, 'Max string size enforced for src in distance_lc()');
-dies_ok(sub { $t->distance_lc('a', 'b'x10000) }, 'Max string size enforced for dst in distance_lc()');
+dies_ok(sub { $t->distance_l('a'x20000, 'b') }, 'Max string size enforced for src in distance_l()');
+dies_ok(sub { $t->distance_l('a', 'b'x20000) }, 'Max string size enforced for dst in distance_l()');
+dies_ok(sub { $t->distance_c('a'x20000, 'b') }, 'Max string size enforced for src in distance_c()');
+dies_ok(sub { $t->distance_c('a', 'b'x20000) }, 'Max string size enforced for dst in distance_c()');
+dies_ok(sub { $t->distance_lc('a'x20000, 'b') }, 'Max string size enforced for src in distance_lc()');
+dies_ok(sub { $t->distance_lc('a', 'b'x20000) }, 'Max string size enforced for dst in distance_lc()');
 
 # Costs
 is(_new(100, 1, 100, 100)->distance_c('xxxx', 'xxaxx'), 1, 'Costs: insert');
@@ -49,6 +50,9 @@ is_deeply(
     [ [ 'axb', 6 ], [ 'abcde', 4 ], [ 'ab', 4 ], [ 'a', 8 ] ],
     "Returning all matches in distance_lc_all()"
 );
+
+no_leaks_ok(sub { _new(8, 2, 4, 8)->distance_lc_all('abc', @teststrings) }, 'no memory leaks in distance_lc_all');
+no_leaks_ok(sub { _new(3)->distance_l_all('abc', @teststrings) }, 'no memory leaks in distance_lc_all');
 
 # Partial arguments to new()
 my @args = (10, 2, 3, 4);
