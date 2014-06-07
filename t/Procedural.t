@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 18;
+use Test::More tests => 20;
 use Test::Exception;
 use Test::LeakTrace;
 
@@ -42,5 +42,5 @@ is_deeply(
 );
 
 no_leaks_ok(sub { levenshtein_lc_all(8, 2, 4, 8, 'abc', @teststrings) }, 'no memory leaks in levenshtein_lc_all');
-no_leaks_ok(sub { levenshteini_l_all(8, 'abc', @teststrings) }, 'no memory leaks in levenshtein_lc_all');
+no_leaks_ok(sub { levenshtein_l_all(8, 'abc', @teststrings) }, 'no memory leaks in levenshtein_l_all');
 
