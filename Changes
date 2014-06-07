@@ -1,5 +1,8 @@
 Revision history for Perl extension Text::Levenshtein::Flexible.
 
+0.09  2014-06-07
+    * print "I will not make any last-minute changes to tests\n" x 100;
+
 0.08  2014-06-06
     * Converted the list methods (*_all) to XS, resulting in a big speedup when
       testing large lists of strings.
