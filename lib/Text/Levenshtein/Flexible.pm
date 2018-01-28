@@ -195,7 +195,7 @@ Of course there's no C<distance_all()> method either.
 
 According to a few completely made-up benchmarks,
 L<Text::Levenshtein::Flexible> is at least as fast as either
-L<Text::Levenshtein::XS>, L<Text::LevenshteinXS> or L<Text::Fuzzy> (Core i7
+L<Text::Levenshtein::XS>, L<Text::LevenshteinXS> or L<Text::Fuzzy> (Core i5
 920) and between 25% and 48% faster on some systems (Phenom II X6 1090T). A
 small benchmark script is included to test on your system, I'd be interested to
 hear about any unexpectedly good or bad performance.
