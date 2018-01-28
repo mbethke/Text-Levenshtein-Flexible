@@ -177,7 +177,7 @@ Just like C<levenshtein_c()> but using the previously specified costs.
 
 C<levenshtein_l()>'s modern brother.
 
-=head3 distance_lc($src, $dst, $max_distance, $cost_ins, $cost_del, $cost_sub)
+=head3 distance_lc($src, $dst)
 
 The nicer variant of C<levenshtein_lc()>.
 
