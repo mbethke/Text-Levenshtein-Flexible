@@ -19,6 +19,9 @@
 #define SETUP_SRC_DST \
       src_c = SvPV(src, src_bytes); \
       dst_c = SvPV(dst, dst_bytes);
+#define SETUP_S_CHAR_LEN(s_char_len, src_bytes, src_chars, dst_bytes, dst_chars) \
+      if(src_bytes != src_chars || dst_bytes != dst_chars) \
+         s_char_len = setup_charlen(src_c, src_chars);
 #define CHECK_RETVAL_MAX(var) if((var) + 1 <= RETVAL) XSRETURN_UNDEF;
 
 struct tlf_object {
@@ -40,11 +43,13 @@ levenshtein(src, dst)
    INIT:
       STRLEN src_bytes, src_chars, dst_bytes, dst_chars;
       const char *src_c, *dst_c;
+      int *s_char_len = NULL;
    CODE:
       SETUP_SRC_DST;
       CALCULATE_CHAR_LENGTHS(src, dst, src_bytes, dst_bytes, src_chars, dst_chars);
+      SETUP_S_CHAR_LEN(s_char_len, src_bytes, src_chars, dst_bytes, dst_chars)
 	   RETVAL = levenshtein_internal(
-         src_c, dst_c, src_bytes, dst_bytes, src_chars, dst_chars,
+         src_c, dst_c, s_char_len, src_bytes, dst_bytes, src_chars, dst_chars,
          1, 1, 1
       );
    OUTPUT:
@@ -61,11 +66,13 @@ levenshtein_c(src, dst, cost_ins, cost_del, cost_sub)
    INIT:
       STRLEN src_bytes, src_chars, dst_bytes, dst_chars;
       const char *src_c, *dst_c;
+      int *s_char_len = NULL;
    CODE:
       SETUP_SRC_DST;
       CALCULATE_CHAR_LENGTHS(src, dst, src_bytes, dst_bytes, src_chars, dst_chars);
+      SETUP_S_CHAR_LEN(s_char_len, src_bytes, src_chars, dst_bytes, dst_chars)
 	   RETVAL = levenshtein_internal(
-         src_c, dst_c, src_bytes, dst_bytes, src_chars, dst_chars,
+         src_c, dst_c, s_char_len, src_bytes, dst_bytes, src_chars, dst_chars,
          SvUV(cost_ins), SvUV(cost_del), SvUV(cost_sub)
       );
    OUTPUT:
@@ -81,11 +88,13 @@ levenshtein_l(src, dst, max)
       STRLEN src_bytes, src_chars, dst_bytes, dst_chars;
       const char *src_c, *dst_c;
       const unsigned int max_dist = SvUV(max);
+      int *s_char_len = NULL;
    CODE:
       SETUP_SRC_DST;
       CALCULATE_CHAR_LENGTHS(src, dst, src_bytes, dst_bytes, src_chars, dst_chars);
+      SETUP_S_CHAR_LEN(s_char_len, src_bytes, src_chars, dst_bytes, dst_chars)
 	   RETVAL = levenshtein_less_equal_internal(
-         src_c, dst_c, src_bytes, dst_bytes, src_chars, dst_chars,
+         src_c, dst_c, s_char_len, src_bytes, dst_bytes, src_chars, dst_chars,
          1, 1, 1,
          max_dist
       );
@@ -105,12 +114,14 @@ levenshtein_lc(src, dst, max, cost_ins, cost_del, cost_sub)
    INIT:
       STRLEN src_bytes, src_chars, dst_bytes, dst_chars;
       const char *src_c, *dst_c;
+      int *s_char_len = NULL;
       const unsigned int max_dist = SvUV(max);
    CODE:
       SETUP_SRC_DST;
       CALCULATE_CHAR_LENGTHS(src, dst, src_bytes, dst_bytes, src_chars, dst_chars);
+      SETUP_S_CHAR_LEN(s_char_len, src_bytes, src_chars, dst_bytes, dst_chars)
 	   RETVAL = levenshtein_less_equal_internal(
-         src_c, dst_c, src_bytes, dst_bytes, src_chars, dst_chars,
+         src_c, dst_c, s_char_len, src_bytes, dst_bytes, src_chars, dst_chars,
          SvUV(cost_ins), SvUV(cost_del), SvUV(cost_sub),
          max_dist
       );
@@ -147,11 +158,13 @@ distance(self, src, dst)
    INIT:
       STRLEN src_bytes, src_chars, dst_bytes, dst_chars;
       const char *src_c, *dst_c;
+      int *s_char_len = NULL;
    CODE:
       SETUP_SRC_DST;
       CALCULATE_CHAR_LENGTHS(src, dst, src_bytes, dst_bytes, src_chars, dst_chars);
+      SETUP_S_CHAR_LEN(s_char_len, src_bytes, src_chars, dst_bytes, dst_chars)
 	   RETVAL = levenshtein_internal(
-         src_c, dst_c, src_bytes, dst_bytes, src_chars, dst_chars,
+         src_c, dst_c, s_char_len, src_bytes, dst_bytes, src_chars, dst_chars,
          1, 1, 1
       );
    OUTPUT:
@@ -165,11 +178,13 @@ distance_c(self, src, dst)
    INIT:
       STRLEN src_bytes, src_chars, dst_bytes, dst_chars;
       const char *src_c, *dst_c;
+      int *s_char_len = NULL;
    CODE:
       SETUP_SRC_DST;
       CALCULATE_CHAR_LENGTHS(src, dst, src_bytes, dst_bytes, src_chars, dst_chars);
+      SETUP_S_CHAR_LEN(s_char_len, src_bytes, src_chars, dst_bytes, dst_chars)
 	   RETVAL = levenshtein_internal(
-         src_c, dst_c, src_bytes, dst_bytes, src_chars, dst_chars,
+         src_c, dst_c, s_char_len, src_bytes, dst_bytes, src_chars, dst_chars,
          self->cost_ins, self->cost_del, self->cost_sub
       );
    OUTPUT:
@@ -183,11 +198,13 @@ distance_l(self, src, dst)
    INIT:
       STRLEN src_bytes, src_chars, dst_bytes, dst_chars;
       const char *src_c, *dst_c;
+      int *s_char_len = NULL;
    CODE:
       SETUP_SRC_DST;
       CALCULATE_CHAR_LENGTHS(src, dst, src_bytes, dst_bytes, src_chars, dst_chars);
+      SETUP_S_CHAR_LEN(s_char_len, src_bytes, src_chars, dst_bytes, dst_chars)
 	   RETVAL = levenshtein_less_equal_internal(
-         src_c, dst_c, src_bytes, dst_bytes, src_chars, dst_chars,
+         src_c, dst_c, s_char_len, src_bytes, dst_bytes, src_chars, dst_chars,
          1, 1, 1,
          self->max
       );
@@ -203,11 +220,13 @@ distance_lc(self, src, dst)
    INIT:
       STRLEN src_bytes, src_chars, dst_bytes, dst_chars;
       const char *src_c, *dst_c;
+      int *s_char_len = NULL;
    CODE:
       SETUP_SRC_DST;
       CALCULATE_CHAR_LENGTHS(src, dst, src_bytes, dst_bytes, src_chars, dst_chars);
+      SETUP_S_CHAR_LEN(s_char_len, src_bytes, src_chars, dst_bytes, dst_chars)
 	   RETVAL = levenshtein_less_equal_internal(
-         src_c, dst_c, src_bytes, dst_bytes, src_chars, dst_chars,
+         src_c, dst_c, s_char_len, src_bytes, dst_bytes, src_chars, dst_chars,
          self->cost_ins, self->cost_del, self->cost_sub,
          self->max
       );
@@ -224,18 +243,31 @@ distance_l_all(self, src, ...)
       STRLEN src_bytes, src_chars, dst_bytes, dst_chars;
       const char *src_c, *dst_c;
       unsigned int dist, dst_count;
+      int need_s_char_len = 0;
+      int *s_char_len = NULL;
       SV *dst;
       SV *tmp_result[2];
       AV *result;
    PPCODE:
       src_c = SvPV(src, src_bytes);
       src_chars = sv_len_utf8(src);
+      if(src_bytes != src_chars) {
+         s_char_len = setup_charlen(src_c, src_chars);
+         need_s_char_len = 1;
+      }
+
       for(dst_count=2; dst_count < items; ++dst_count) {
          dst = ST(dst_count);
          dst_c = SvPV(dst, dst_bytes);
          dst_chars = sv_len_utf8(dst);
+         // Initialize s_char_len if needed due to dst_bytes != dst_chars
+         // and not initialized yet
+         if( !need_s_char_len && ( dst_bytes != dst_chars )) 
+            s_char_len = setup_charlen(src_c, src_chars);
 	      dist = levenshtein_less_equal_internal(
-           src_c, dst_c, src_bytes, dst_bytes, src_chars, dst_chars,
+           src_c, dst_c,
+           (need_s_char_len || dst_bytes != dst_chars) ? s_char_len : NULL,
+           src_bytes, dst_bytes, src_chars, dst_chars,
            1, 1, 1, self->max
          );
          if(dist <= self->max) {
@@ -255,18 +287,28 @@ distance_lc_all(self, src, ...)
       STRLEN src_bytes, src_chars, dst_bytes, dst_chars;
       const char *src_c, *dst_c;
       unsigned int dist, dst_count;
+      int need_s_char_len = 0;
+      int *s_char_len = NULL;
       SV *dst;
       SV *tmp_result[2];
       AV *result;
    PPCODE:
       src_c = SvPV(src, src_bytes);
       src_chars = sv_len_utf8(src);
+      if(src_bytes != src_chars) {
+         s_char_len = setup_charlen(src_c, src_chars);
+         need_s_char_len = 1;
+      }
       for(dst_count=2; dst_count < items; ++dst_count) {
          dst = ST(dst_count);
          dst_c = SvPV(dst, dst_bytes);
          dst_chars = sv_len_utf8(dst);
+         if( !need_s_char_len && ( dst_bytes != dst_chars )) 
+            s_char_len = setup_charlen(src_c, src_chars);
 	      dist = levenshtein_less_equal_internal(
-           src_c, dst_c, src_bytes, dst_bytes, src_chars, dst_chars,
+           src_c, dst_c,
+           (need_s_char_len || dst_bytes != dst_chars) ? s_char_len : NULL,
+           src_bytes, dst_bytes, src_chars, dst_chars,
            self->cost_ins, self->cost_del, self->cost_sub,
            self->max
          );

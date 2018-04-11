@@ -29,6 +29,7 @@
  */
 
 #include <ctype.h>
+#include "ppport.h"
 
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
    /* we have "inline" */
@@ -46,6 +47,20 @@ inline int rest_of_char_same(const char *s1, const char *s2, int len)
 			return 0;
 	}
 	return 1;
+}
+
+inline static int *setup_charlen(const char *cp, int len) {
+   int *s_char_len;
+   int i;
+
+   Newx(s_char_len, len + 1, int);
+   for (i = 0; i < len; ++i)
+   {
+      s_char_len[i] = UTF8SKIP(cp);
+      cp += s_char_len[i];
+   }
+   s_char_len[i] = 0;
+   return s_char_len;
 }
 
 #include "levenshtein_internal.c"

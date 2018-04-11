@@ -24,12 +24,14 @@
 #ifdef LEVENSHTEIN_LESS_EQUAL
 static int levenshtein_less_equal_internal(
       const char *s_data, const char *t_data,
+      int *s_char_len,
       int s_bytes, int t_bytes,
       int m, int n,
       int ins_c, int del_c, int sub_c, int max_d);
 #else
 static int levenshtein_internal(
       const char *s_data, const char *t_data,
+      int *s_char_len,
       int s_bytes, int t_bytes,
       int m, int n,
       int ins_c, int del_c, int sub_c);
@@ -73,12 +75,14 @@ static int
 #ifdef LEVENSHTEIN_LESS_EQUAL
 levenshtein_less_equal_internal(
       const char *s_data, const char *t_data,
+      int *s_char_len,
       int s_bytes, int t_bytes,
       int m, int n,
       int ins_c, int del_c, int sub_c, int max_d)
 #else
 levenshtein_internal(
       const char *s_data, const char *t_data,
+      int *s_char_len,
       int s_bytes, int t_bytes,
       int m, int n,
       int ins_c, int del_c, int sub_c)
@@ -86,7 +90,6 @@ levenshtein_internal(
 {
 	int *prev, *prev_alloc;
 	int *curr;
-	int *s_char_len = NULL;
 	int i, j;
 	const char *y;
    int result;
@@ -178,28 +181,6 @@ levenshtein_internal(
 		}
 	}
 #endif
-
-	/*
-	 * In order to avoid calling UTF8SKIP() repeatedly on each character in s,
-	 * we cache all the lengths before starting the main loop -- but if all
-	 * the characters in both strings are single byte, then we skip this and
-	 * use a fast-path in the main loop.  If only one string contains
-	 * multi-byte characters, we still build the array, so that the fast-path
-	 * needn't deal with the case where the array hasn't been initialized.
-	 */
-	if (m != s_bytes || n != t_bytes)
-	{
-		int			i;
-		const char *cp = s_data;
-
-      Newx(s_char_len, m + 1, int);
-		for (i = 0; i < m; ++i)
-		{
-			s_char_len[i] = UTF8SKIP(cp);
-			cp += s_char_len[i];
-		}
-		s_char_len[i] = 0;
-	}
 
 	/* One more cell for initialization column and row. */
 	++m;
