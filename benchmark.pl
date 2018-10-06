@@ -21,8 +21,8 @@ cmpthese(100000, {
     }
 );
 
-test_variant("xa"x100, "yb"x100, "ASCII text", 1);
-test_variant("ⓕⓞⓤⓡ"x100,"ⓕⓞⓡ"x100, "strings of 3-byte UTF-8 characters", 0);
+test_variant("xa"x100, "ybc"x60, "ASCII text", 1);
+test_variant("ⓕⓞⓤⓡ"x100,"ⓞⓕⓞⓡ"x100, "strings of 3-byte UTF-8 characters", 0);
 test_variant("ⓕⓞaⓤⓡ"x100, "aⓕⓞⓡ"x100, "a mixture of ASCII and 3-byte UTF-8 characters", 0);
 done_testing;
 
@@ -30,6 +30,7 @@ sub test_variant {
     my ($s, $t, $message, $testTLXS) = @_;
     print "Testing with $message\n";
     my $tf = Text::Fuzzy->new($s);
+    my $tlf = Text::Levenshtein::Flexible->new(65535);
     is(Text::Levenshtein::Flexible::levenshtein($s,$t), Text::Levenshtein::XS::distance($s,$t),
         "Same result Text::Levenshtein::Flexible vs. Text::Levenshtein::XS"
     );
@@ -37,14 +38,17 @@ sub test_variant {
         "Same result Text::Levenshtein::Flexible vs. Text::Fuzzy"
     );
     $testTLXS and is(Text::Levenshtein::Flexible::levenshtein($s,$t), Text::LevenshteinXS::distance($s,$t),
-            "Same result Text::Levenshtein::Flexible vs. Text::LevenshteinXS"
-        );
+        "Same result Text::Levenshtein::Flexible vs. Text::LevenshteinXS"
+    );
 
-    cmpthese(100000, {
-            'Text::Levenshtein::Flexible'   => sub { Text::Levenshtein::Flexible::levenshtein($s, $t); },
-            'Text::Levenshtein::XS'         => sub { Text::Levenshtein::XS::distance($s, $t); },
-            'Text::Fuzzy'                   => sub { $tf->distance($t); },
-            $testTLXS ? ('Text::LevenshteinXS' => sub { Text::LevenshteinXS::distance($s, $t); }) : (),
+    my @inputs = ($t) x 1000;
+    cmpthese(10, {
+            'Text::Levenshtein::Flexible/a' => sub { $tlf->distance_l_all($s, @inputs); },
+            'Text::Levenshtein::Flexible'   => sub { $tlf->distance_l($s, $_) for @inputs; },
+            'Text::Levenshtein::XS'         => sub { Text::Levenshtein::XS::distance($s, $_) for @inputs },
+            'Text::Fuzzy/newobj'            => sub { Text::Fuzzy->new($s)->distance($_) for @inputs },
+            'Text::Fuzzy/reuse'             => sub { $tf->distance($_) for @inputs },
+            $testTLXS ? ('Text::LevenshteinXS' => sub { Text::LevenshteinXS::distance($s, $t) for @inputs }) : (),
         }
     );
 
