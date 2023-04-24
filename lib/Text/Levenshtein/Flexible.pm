@@ -24,10 +24,20 @@ our %EXPORT_TAGS = (
 
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
-our $VERSION = '0.100';
+our $VERSION = '2.000000';
 
 require XSLoader;
 XSLoader::load('Text::Levenshtein::Flexible', $VERSION);
+
+sub levenshtein {
+    push @_, 1, 1, 1;
+    goto &levenshtein_c;
+}
+
+sub levenshtein_l {
+    push @_, 1, 1, 1;
+    goto &levenshtein_lc;
+}
 
 sub levenshtein_l_all {
     Text::Levenshtein::Flexible->new(shift)->distance_l_all(@_);
@@ -36,6 +46,11 @@ sub levenshtein_l_all {
 sub levenshtein_lc_all {
     Text::Levenshtein::Flexible->new(splice(@_, 0, 4))->distance_lc_all(@_);
 }
+
+sub distance_c { goto &distance; }
+sub distance_lc { goto &distance_l; }
+sub distance_l_all { goto &distances_l; }
+sub distance_lc_all { goto &distances_l; }
 
 1;
 __END__

@@ -63,6 +63,11 @@ inline static int *setup_charlen(const char *cp, int len) {
    return s_char_len;
 }
 
+/* just for symmetry */
+inline static void free_charlen(int *charlen) {
+   if(charlen) Safefree(charlen);
+}
+
 #include "levenshtein_internal.c"
 #define LEVENSHTEIN_LESS_EQUAL
 #include "levenshtein_internal.c"

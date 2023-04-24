@@ -381,8 +381,6 @@ levenshtein_internal(
 #ifdef LEVENSHTEIN_LESS_EQUAL
 free_return:
 #endif
-   if(s_char_len)
-      Safefree(s_char_len);
    if(prev)
       Safefree(prev_alloc);
    return result;
