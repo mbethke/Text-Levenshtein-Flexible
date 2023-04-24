@@ -24,7 +24,7 @@ our %EXPORT_TAGS = (
 
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
-our $VERSION = '0.09';
+our $VERSION = '0.10';
 
 require XSLoader;
 XSLoader::load('Text::Levenshtein::Flexible', $VERSION);
